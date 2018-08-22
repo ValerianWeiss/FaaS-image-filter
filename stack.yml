@@ -1,0 +1,21 @@
+provider:
+  name: faas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  imageblur:
+    lang: go
+    handler: ./src/imageFunctions/blur
+    image: imageblur:latest
+  blackwhite:
+    lang: go
+    handler: ./src/imageFunctions/blackwhite
+    image: imageblur:latest
+  trianglelayer:
+    lang: go
+    handler: ./src/imageFunctions/trianglelayer
+    image: imageblur:latest
+  circlelayer:
+    lang: go
+    handler: ./src/imageFunctions/circlelayer
+    image: imageblur:latest
