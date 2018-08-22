@@ -1,25 +1,25 @@
-package imagefilter
+package function
 
 import (
 	"image"
 	"math"
 
-	"imagefilter/openfaas/faas/function/utils"
+	"handler/function/utils"
 )
 
 // Handle a serverless request
 func Handle(req []byte) image.RGBA {
-	reqMap := utils.ParseJSON(req)
-	imgBytes := reqMap["image"].([]byte)
-	blurscale := reqMap["blurscale"].(int)
+	jsonMap := utils.ParseJSON(req)
+	imgBase64 := jsonMap["image"].(string)
+	blurscale := int(jsonMap["blurscale"].(float64))
 
-	img := utils.ReadImgBytes(imgBytes)
+	img := utils.DecodeBase64Img(imgBase64)
 	newImg := blur(img, blurscale)
 
 	return *newImg
 }
 
-// Blur blures an image
+// blur blures an image
 func blur(img image.Image, gridSize int) *image.RGBA {
 	width, height := utils.GetImgSize(img)
 	newImg := image.NewRGBA(image.Rect(0, 0, width, height))

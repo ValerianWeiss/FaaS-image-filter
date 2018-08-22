@@ -4,6 +4,6 @@ provider:
 
 functions:
   imageblur:
-    lang: dockerfile
-    handler: ./src/imageFunctions/blur
-    image: imageblur:latest
+    lang: go
+    handler: ./src/imageFilters/blurfilter
+    image: blurfilter:latest
