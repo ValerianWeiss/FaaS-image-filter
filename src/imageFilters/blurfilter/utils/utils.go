@@ -8,7 +8,6 @@ import (
 	"image/color"
 	"image/jpeg"
 	"image/png"
-	"math"
 	"strings"
 )
 
@@ -25,44 +24,10 @@ func ParseJSON(jsonObj []byte) map[string]interface{} {
 	}
 }
 
-// ReadImgBytes reads and decodes an image from a byte array
-func ReadImgBytes(content []byte) image.Image {
-	reader := bytes.NewReader(content)
-	registerFormats()
-	img, _, _ := image.Decode(reader)
-	return img
-}
-
 // GetImgSize returns the size of an image
 func GetImgSize(img image.Image) (width int, height int) {
 	size := img.Bounds()
 	return size.Max.X, size.Max.Y
-}
-
-// Dist calculates the distance between two points
-func Dist(x1, y1, x2, y2 float64) float64 {
-	len1 := math.Sqrt(math.Pow(x1, 2.0) + math.Pow(y1, 2.0))
-	len2 := math.Sqrt(math.Pow(x2, 2.0) + math.Pow(y2, 2.0))
-
-	var vx float64
-	var vy float64
-
-	if len1 > len2 {
-		vx = x1 - x2
-		vy = y1 - y2
-	} else if len1 < len2 {
-		vx = x2 - x1
-		vy = y2 - y1
-	} else {
-		return 0
-	}
-	return math.Sqrt(math.Pow(vx, 2.0) + math.Pow(vy, 2.0))
-}
-
-// Registers the jpg and png decoder
-func registerFormats() {
-	image.RegisterFormat("jpeg", "jpeg", jpeg.Decode, jpeg.DecodeConfig)
-	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
 }
 
 // GetAvgColor calculates the average color in of pixels which are left and right
@@ -91,12 +56,49 @@ func GetAvgColor(x int, y int, img image.Image, xrange int) color.RGBA {
 }
 
 // DecodeBase64Img decodes a image which is encoded as base64 string
-func DecodeBase64Img(base64str string) image.Image {
-	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(base64str))
-	img, _, err := image.Decode(reader)
+func DecodeBase64Img(base64str string) (image.Image, string) {
+
+	var unbased []byte
+	var err error
+	var img image.Image
+	soi := strings.Index(base64str, ",")
+	types := strings.Index(base64str, "/") + 1
+	typee := strings.Index(base64str, ";")
+	filetype := base64str[types:typee]
+
+	unbased, err = base64.StdEncoding.DecodeString(base64str[soi+1:])
+
+	if err != nil {
+		panic("Cannot decode b64")
+	}
+
+	reader := bytes.NewReader(unbased)
+
+	if filetype == "jpeg" {
+		img, err = jpeg.Decode(reader)
+	} else if filetype == "png" {
+		img, err = png.Decode(reader)
+	} else {
+		panic("Filetype " + filetype + " not supported\nSupported filetypes: jpeg, png")
+	}
 
 	if err != nil {
 		panic(err)
 	}
-	return img
+
+	return img, filetype
+}
+
+// EncodeBase64Img ecodes a  image to base64
+func EncodeBase64Img(img image.Image, filetype string) string {
+	buffer := new(bytes.Buffer)
+	err := jpeg.Encode(buffer, img, nil)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// convert the buffer bytes to base64 string
+	imgBase64Str := "data:image/" + filetype + ";base64," + base64.StdEncoding.EncodeToString(buffer.Bytes())
+	return imgBase64Str
 }

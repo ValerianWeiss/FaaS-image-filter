@@ -3,6 +3,7 @@ build
 src
 bin
 pkg
+.vscode
 *.jpg
 *.png
 *.txt

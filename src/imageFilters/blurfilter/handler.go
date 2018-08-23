@@ -1,6 +1,7 @@
 package function
 
 import (
+	"encoding/json"
 	"image"
 	"math"
 
@@ -10,13 +11,16 @@ import (
 // Handle a serverless request
 func Handle(req []byte) image.RGBA {
 	jsonMap := utils.ParseJSON(req)
-	imgBase64 := jsonMap["image"].(string)
+	imgBase64str := jsonMap["image"].(string)
 	blurscale := int(jsonMap["blurscale"].(float64))
 
-	img := utils.DecodeBase64Img(imgBase64)
+	img, imgType := utils.DecodeBase64Img(imgBase64str)
 	newImg := blur(img, blurscale)
+	newImgBase64str := utils.EncodeBase64Img(newImg, imgType)
 
-	return *newImg
+	resMap := map[string]string{"image": newImgBase64str}
+	res, _ := json.Marshal(resMap)
+	return res
 }
 
 // blur blures an image
