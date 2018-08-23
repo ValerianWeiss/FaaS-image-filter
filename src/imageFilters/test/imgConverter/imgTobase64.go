@@ -19,8 +19,10 @@ func main() {
 	fsize := fInfo.Size()
 	buffer := make([]byte, fsize)
 	file.Read(buffer)
-
-	imgBase64Str := base64.StdEncoding.EncodeToString(buffer)
+	
+	imgBase64Str := "data:image/jpeg;base64,"
+	imgBase64Str += base64.StdEncoding.EncodeToString(buffer)
+	
 	strFile, _ := os.Create("./imgBase64Str.txt")
 	strFile.Write([]byte(imgBase64Str))
 }

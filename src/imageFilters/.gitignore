@@ -1,2 +1,8 @@
 template
 build
+src
+bin
+pkg
+*.jpg
+*.png
+*.txt

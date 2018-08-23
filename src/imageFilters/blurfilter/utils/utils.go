@@ -17,8 +17,6 @@ func ParseJSON(jsonObj []byte) map[string]interface{} {
 	jsonMap := make(map[string]interface{})
 	e := json.Unmarshal(jsonObj, &jsonMap)
 
-	test := jsonMap["image"].(string)
-	panic(test)
 	//panic on error
 	if e != nil {
 		panic(e)
@@ -96,6 +94,7 @@ func GetAvgColor(x int, y int, img image.Image, xrange int) color.RGBA {
 func DecodeBase64Img(base64str string) image.Image {
 	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(base64str))
 	img, _, err := image.Decode(reader)
+
 	if err != nil {
 		panic(err)
 	}
