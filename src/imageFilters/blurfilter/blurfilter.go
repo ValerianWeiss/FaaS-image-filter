@@ -22,7 +22,7 @@ func main() {
 	fmt.Println(output)
 }
 
-// Handle a serverless request
+// handle handles a serverless request
 func handle(req []byte) string {
 	jsonMap := utils.ParseJSON(req)
 	imgBase64str := jsonMap["image"].(string)

@@ -2,8 +2,6 @@ FROM alpine/git
 
 WORKDIR /fsrc
 RUN git clone https://github.com/ValerianWeiss/FaaS-image-filter.git
-WORKDIR /fsrc/FaaS-image-filter
-RUN git checkout dyndep
 
 
 FROM golang:1.9.7-alpine
