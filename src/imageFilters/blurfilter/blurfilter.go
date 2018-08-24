@@ -1,14 +1,29 @@
-package function
+package main
 
 import (
+	"blurfilter/utils"
 	"encoding/json"
-	"handler/function/utils"
+	"fmt"
 	"image"
+	"io/ioutil"
+	"log"
 	"math"
+	"os"
 )
 
-// Handle a serverless request
-func Handle(req []byte) string {
+func main() {
+	input, err := ioutil.ReadAll(os.Stdin)
+
+	if err != nil {
+		log.Fatalf("Unable to read standard input: %s", err.Error())
+	}
+
+	output := handle(input)
+	fmt.Println(output)
+}
+
+// handle handles a serverless request
+func handle(req []byte) string {
 	jsonMap := utils.ParseJSON(req)
 	imgBase64str := jsonMap["image"].(string)
 	blurscale := int(jsonMap["blurscale"].(float64))

@@ -4,9 +4,6 @@ provider:
 
 functions:
   imageblur:
-    lang: go
+    lang: dockerfile
     handler: ./src/imageFilters/blurfilter
     image: blurfilter:latest
-    environment:
-      write_debug: true
-        
