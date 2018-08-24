@@ -2,14 +2,13 @@ package function
 
 import (
 	"encoding/json"
+	"handler/function/utils"
 	"image"
 	"math"
-
-	"handler/function/utils"
 )
 
 // Handle a serverless request
-func Handle(req []byte) image.RGBA {
+func Handle(req []byte) []byte {
 	jsonMap := utils.ParseJSON(req)
 	imgBase64str := jsonMap["image"].(string)
 	blurscale := int(jsonMap["blurscale"].(float64))
