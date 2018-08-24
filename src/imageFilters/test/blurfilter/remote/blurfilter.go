@@ -1,7 +1,7 @@
 package main
 
 import (
-	"blurfilter/utils"
+	"imageFilters/utils"
 	"bufio"
 	"bytes"
 	"encoding/base64"

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"blurfilter/utils"
 	"encoding/json"
 	"fmt"
-	"blurfilter/utils"
 	"image"
 	"io/ioutil"
 	"log"
