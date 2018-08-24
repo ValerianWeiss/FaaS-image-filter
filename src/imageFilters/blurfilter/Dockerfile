@@ -1,13 +1,19 @@
+FROM alpine/git
+
+WORKDIR /fsrc
+RUN git clone https://github.com/ValerianWeiss/FaaS-image-filter.git
+WORKDIR /fsrc/FaaS-image-filter
+RUN git checkout dyndep
+
+
 FROM golang:1.9.7-alpine
 
 ENTRYPOINT []
 
-WORKDIR /fsrc
-RUN git clone https://github.com/ValerianWeiss/FaaS-image-filter.git
-RUN cp FaaS-image-filter/src/imageFilters/blurfilter/blurfilter.go /go/src/blurfilter
-RUN cp FaaS-image-filter/src/imageFilters/utils /go/src/blurfilter
-
 WORKDIR /go/src/blurfilter
+
+COPY --from=0 /fsrc/FaaS-image-filter/src/imageFilters/blurfilter/blurfilter.go .
+COPY --from=0 /fsrc/FaaS-image-filter/src/imageFilters/utils /go/src/blurfilter/utils
 RUN rm -f /fsrc
 RUN go install
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"imageFilters/utils"
+	"blurfilter/utils"
 	"bufio"
 	"bytes"
 	"encoding/base64"
@@ -66,11 +66,11 @@ func main() {
 	img, ftype := utils.DecodeBase64Img(newImgBase64str)
 
 	nf, _ := os.Create("./result." + ftype)
+	defer nf.Close()
 
 	if ftype == "png" {
 		png.Encode(nf, img)
 	} else {
 		jpeg.Encode(nf, img, nil)
 	}
-	defer nf.Close()
 }
