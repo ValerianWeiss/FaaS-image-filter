@@ -53,7 +53,7 @@ func main() {
 
 	img, ftype := utils.DecodeBase64Img(newImgBase64str)
 
-	nf, _ := os.Create("./out." + ftype)
+	nf, _ := os.Create("./result." + ftype)
 
 	if ftype == "png" {
 		png.Encode(nf, img)

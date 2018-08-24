@@ -7,3 +7,6 @@ functions:
     lang: go
     handler: ./src/imageFilters/blurfilter
     image: blurfilter:latest
+    environment:
+      write_debug: true
+        

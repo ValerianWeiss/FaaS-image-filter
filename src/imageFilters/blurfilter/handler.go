@@ -8,7 +8,7 @@ import (
 )
 
 // Handle a serverless request
-func Handle(req []byte) []byte {
+func Handle(req []byte) string {
 	jsonMap := utils.ParseJSON(req)
 	imgBase64str := jsonMap["image"].(string)
 	blurscale := int(jsonMap["blurscale"].(float64))
@@ -19,7 +19,8 @@ func Handle(req []byte) []byte {
 
 	resMap := map[string]string{"image": newImgBase64str}
 	res, _ := json.Marshal(resMap)
-	return res
+
+	return string(res)
 }
 
 // blur blures an image
