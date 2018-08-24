@@ -1,14 +1,29 @@
-package function
+package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"handler/function/utils"
 	"image"
+	"io/ioutil"
+	"log"
 	"math"
+	"os"
 )
 
+func main() {
+	input, err := ioutil.ReadAll(os.Stdin)
+
+	if err != nil {
+		log.Fatalf("Unable to read standard input: %s", err.Error())
+	}
+
+	output := handle(input)
+	fmt.Println(output)
+}
+
 // Handle a serverless request
-func Handle(req []byte) string {
+func handle(req []byte) string {
 	jsonMap := utils.ParseJSON(req)
 	imgBase64str := jsonMap["image"].(string)
 	blurscale := int(jsonMap["blurscale"].(float64))
