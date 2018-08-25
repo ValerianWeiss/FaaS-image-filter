@@ -15,6 +15,8 @@ WORKDIR /go/src/FaaS-image-filter/src/imageFilters/
 RUN cp -r /fsrc/FaaS-image-filter/src/imageFilters/blurfilter ./blurfilter
 RUN cp -r /fsrc/FaaS-image-filter/src/imageFilters/utils ./utils
 RUN rm -r /fsrc
+
+WORKDIR /go/src/FaaS-image-filter/src/imageFilters/blurfilter
 RUN go install
 
 
