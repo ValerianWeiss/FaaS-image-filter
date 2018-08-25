@@ -1,20 +1,41 @@
 package imagefilter
 
 import (
+	"encoding/json"
+	"fmt"
 	"image"
 	"image/color"
+	"io/ioutil"
+	"log"
+	"os"
 
-	"imagefilter.com/src/imageFunctions/utils"
+	"FaaS-image-filter/src/imageFilters/utils"
 )
 
-// Handle a serverless request
-func Handle(req []byte) image.RGBA {
-	reqMap := utils.ParseJSON(req)
-	imgBytes := reqMap["image"].([]byte)
-	img := utils.ReadImgBytes(imgBytes)
-	newImg := blackWhite(img)
+func main() {
+	input, err := ioutil.ReadAll(os.Stdin)
 
-	return *newImg
+	if err != nil {
+		log.Fatalf("Unable to read standard input: %s", err.Error())
+	}
+
+	output := handle(input)
+	fmt.Println(output)
+}
+
+// handle a serverless request
+func handle(req []byte) string {
+	jsonMap := utils.ParseJSON(req)
+	imgBase64str := jsonMap["image"].(string)
+
+	img, imgType := utils.DecodeBase64Img(imgBase64str)
+	newImg := blackWhite(img)
+	newImgBase64str := utils.EncodeBase64Img(newImg, imgType)
+
+	resMap := map[string]string{"image": newImgBase64str}
+	res, _ := json.Marshal(resMap)
+
+	return string(res)
 }
 
 // BlackWhite is a image filter which creates a balck and white image of

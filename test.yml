@@ -1,9 +1,0 @@
-provider:
-  name: faas
-  gateway: http://127.0.0.1:8080
-
-functions:
-  imageblur:
-    lang: dockerfile
-    handler: ./src/imageFilters/blurfilter
-    image: blurfilter:latest

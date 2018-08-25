@@ -1,23 +1,26 @@
-package main
+package utils
 
 import (
-	"imageFilters/utils"
+	"FaaS-image-filter/src/imageFilters/utils"
 	"bufio"
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"image/jpeg"
+	"image/png"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
-	"image/png"
-	"image/jpeg"
 )
 
-func main() {
-	f, err := os.Open(os.Args[1])
-	ftype := os.Args[1][strings.Index(os.Args[1], ".")+1:]
+// ExecFunc executes a given imagefilter function and stores the result image
+// as result.png for example in the same directory. It also wirtes to request and
+// response in .txt files
+func ExecFunc(imgPath, url string, reqMap map[string]interface{}) {
+	f, err := os.Open(imgPath)
+	ftype := imgPath[strings.Index(imgPath, ".")+1:]
 	defer f.Close()
 
 	if err != nil {
@@ -36,31 +39,34 @@ func main() {
 
 	// convert the buffer bytes to base64 string
 	imgBase64Str := "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(buffer)
+	reqMap["image"] = imgBase64Str
 
-	reqMap := map[string]interface{}{"image":imgBase64Str, "blurscale":500}
 	req, _ := json.Marshal(reqMap)
 	reqReader := bytes.NewReader(req)
 
 	tf, _ := os.Create("./request.txt")
 	tf.Write(req)
-	defer tf.Close()	
+	defer tf.Close()
 
-	res, _ := http.Post("http://127.0.1.1:8080/function/imageblur", "application/json", reqReader)
+	res, err := http.Post(url, "application/json", reqReader)
+
+	if err != nil {
+		panic(err)
+	}
 
 	defer res.Body.Close()
 	body, _ := ioutil.ReadAll(res.Body)
 
-
 	jsonMap := make(map[string]interface{})
 	e := json.Unmarshal(body, &jsonMap)
+
+	of, _ := os.Create("./response.txt")
+	of.Write(body)
 
 	if e != nil {
 		fmt.Println("Could not parse response")
 		panic(e)
 	}
-
-	of, _ := os.Create("./response.txt")
-	of.Write(body)
 
 	newImgBase64str := jsonMap["image"].(string)
 	img, ftype := utils.DecodeBase64Img(newImgBase64str)
