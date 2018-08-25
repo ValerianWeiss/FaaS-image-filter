@@ -1,7 +1,7 @@
 package main
 
 import (
-	"blurfilter/utils"
+	"FaaS-image-filter/src/imageFilters/utils"
 	"encoding/json"
 	"fmt"
 	"image"
