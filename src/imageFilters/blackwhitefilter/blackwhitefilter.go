@@ -1,4 +1,4 @@
-package imagefilter
+package main
 
 import (
 	"encoding/json"

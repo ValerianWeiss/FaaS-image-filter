@@ -30,4 +30,4 @@ COPY --from=0 /go/bin /go/bin
 ENV fprocess "/go/bin/blurfilter"
 HEALTHCHECK --interval=1s CMD [ -e /tmp/.lock ] || exit 1
 
-CMD [ "/usr/bin/fwatchdog"]
+CMD ["/usr/bin/fwatchdog"]
