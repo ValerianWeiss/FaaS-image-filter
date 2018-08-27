@@ -137,3 +137,25 @@ func EncodeBase64Img(img image.Image, filetype string) string {
 	imgBase64Str := "data:image/" + filetype + ";base64," + base64.StdEncoding.EncodeToString(buffer.Bytes())
 	return imgBase64Str
 }
+
+// Copy copies a image to a new RGBA image
+func Copy(img image.Image) *image.RGBA {
+	width, height := GetImgSize(img)
+	newImg := image.NewRGBA(image.Rect(0, 0, width, height))
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			c := img.At(x, y)
+			newImg.Set(x, y, c)
+		}
+	}
+	return newImg
+}
+
+// CreateResJSON creates a JSON where the image is getting base64 encoded
+// and stored unter the "image" fied of the JSON
+func CreateResJSON(resImg image.Image, ftype string) string {
+	newImgBase64str := EncodeBase64Img(resImg, ftype)
+	resMap := map[string]string{"image": newImgBase64str}
+	res, _ := json.Marshal(resMap)
+	return string(res)
+}
