@@ -81,7 +81,11 @@ func getImgs(req []byte) (image.Image, image.Image, string) {
 	var ftype string
 
 	go func() {
-		reader := bytes.NewReader(req)
+		reqJSONMap := make(map[string]interface{})
+		json.Unmarshal(req, &reqJSONMap)
+		reqJSONMap["blurscale"] = 500
+		blurReq, _ := json.Marshal(reqJSONMap)
+		reader := bytes.NewReader(blurReq)
 		res, err := http.Post("http://127.0.0.1:8080/function/blurfilter", "application/json", reader)
 		bimg, ftype = decodeImg(res, err)
 		wg.Done()
