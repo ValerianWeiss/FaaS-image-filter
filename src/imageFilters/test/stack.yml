@@ -11,3 +11,12 @@ functions:
     lang: dockerfile
     handler: ../blackwhitefilter
     image: blackwhitefilter:latest
+  scalefilter:
+    lang: dockerfile
+    handler: ../scalefilter
+    image: scalefilter:latest
+  circlelayerfilter:
+    lang: dockerfile
+    handler: ../circlelayerfilter
+    image: circlelayerfilter:latest
+  

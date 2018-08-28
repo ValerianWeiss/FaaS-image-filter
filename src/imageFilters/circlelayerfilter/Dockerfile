@@ -12,11 +12,11 @@ ADD https://api.github.com/repos/ValerianWeiss/FaaS-image-filter/git/refs/heads/
 RUN git clone -b master https://github.com/ValerianWeiss/FaaS-image-filter.git
 
 WORKDIR /go/src/FaaS-image-filter/src/imageFilters/
-RUN cp -r /fsrc/FaaS-image-filter/src/imageFilters/circlelayer ./circlelayer
+RUN cp -r /fsrc/FaaS-image-filter/src/imageFilters/circlelayerfilter ./circlelayerfilter
 RUN cp -r /fsrc/FaaS-image-filter/src/imageFilters/utils ./utils
 RUN rm -r /fsrc
 
-WORKDIR /go/src/FaaS-image-filter/src/imageFilters/circlelayer
+WORKDIR /go/src/FaaS-image-filter/src/imageFilters/circlelayerfilter
 RUN go install
 
 
@@ -27,7 +27,7 @@ RUN chmod +x /usr/bin/fwatchdog
 
 COPY --from=0 /go/bin /go/bin
 
-ENV fprocess "/go/bin/circlelayer"
+ENV fprocess "/go/bin/circlelayerfilter"
 HEALTHCHECK --interval=1s CMD [ -e /tmp/.lock ] || exit 1
 
 CMD ["/usr/bin/fwatchdog"]
