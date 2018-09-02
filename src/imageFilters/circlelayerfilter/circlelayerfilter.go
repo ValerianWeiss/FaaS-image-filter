@@ -86,7 +86,7 @@ func getImgs(req []byte) (image.Image, image.Image, string) {
 		reqJSONMap["blurscale"] = 500
 		blurReq, _ := json.Marshal(reqJSONMap)
 		reader := bytes.NewReader(blurReq)
-		res, err := http.Post("http://127.0.0.1:8080/function/blurfilter", "application/json", reader)
+		res, err := http.Post("http://gateway:8080/function/blurfilter", "application/json", reader)
 		bimg, ftype = decodeImg(res, err)
 		wg.Done()
 	}()
@@ -97,7 +97,7 @@ func getImgs(req []byte) (image.Image, image.Image, string) {
 		reqJSONMap["scaling"] = 0.9
 		scaleReq, _ := json.Marshal(reqJSONMap)
 		reader := bytes.NewReader(scaleReq)
-		res, err := http.Post("http://127.0.0.1:8080/function/scalefilter", "application/json", reader)
+		res, err := http.Post("http://gateway:8080/function/scalefilter", "application/json", reader)
 		cimg, _ = decodeImg(res, err)
 		wg.Done()
 	}()
