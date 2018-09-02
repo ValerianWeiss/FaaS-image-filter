@@ -8,7 +8,9 @@ import (
 	"image/color"
 	"image/jpeg"
 	"image/png"
+	"io/ioutil"
 	"math"
+	"net/http"
 	"strings"
 )
 
@@ -158,4 +160,22 @@ func CreateResJSON(resImg image.Image, ftype string) string {
 	resMap := map[string]string{"image": newImgBase64str}
 	res, _ := json.Marshal(resMap)
 	return string(res)
+}
+
+// DecodeImg gets the string property of "image" of the http response,
+// which has to be a base64 encoded image and decodes it
+func DecodeImg(res *http.Response, err error) (image.Image, string) {
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+
+	resJSONMap := make(map[string]interface{})
+	json.Unmarshal(body, &resJSONMap)
+
+	imgBase64str := resJSONMap["image"].(string)
+	return DecodeBase64Img(imgBase64str)
 }

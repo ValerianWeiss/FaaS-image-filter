@@ -2,13 +2,10 @@ package main
 
 import (
 	"FaaS-image-filter/src/imageFilters/utils"
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"image"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"sync"
 )
@@ -53,25 +50,6 @@ func addLayerCircle(baseImg image.Image, cImg image.Image, r float64) *image.RGB
 	return newImg
 }
 
-func decodeImg(res *http.Response, err error) (image.Image, string) {
-
-	if err != nil {
-		panic(err)
-	}
-
-	imgBase64str := getImgStrFromBody(res)
-	return utils.DecodeBase64Img(imgBase64str)
-}
-
-func getImgStrFromBody(res *http.Response) string {
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	resJSONMap := make(map[string]interface{})
-	json.Unmarshal(body, &resJSONMap)
-	return resJSONMap["image"].(string)
-}
-
 func getImgs(req []byte) (image.Image, image.Image, string) {
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -81,24 +59,12 @@ func getImgs(req []byte) (image.Image, image.Image, string) {
 	var ftype string
 
 	go func() {
-		reqJSONMap := make(map[string]interface{})
-		json.Unmarshal(req, &reqJSONMap)
-		reqJSONMap["blurscale"] = 500
-		blurReq, _ := json.Marshal(reqJSONMap)
-		reader := bytes.NewReader(blurReq)
-		res, err := http.Post("http://gateway:8080/function/blurfilter", "application/json", reader)
-		bimg, ftype = decodeImg(res, err)
+		bimg, ftype = utils.BlurImg(req, 500)
 		wg.Done()
 	}()
 
 	go func() {
-		reqJSONMap := make(map[string]interface{})
-		json.Unmarshal(req, &reqJSONMap)
-		reqJSONMap["scaling"] = 0.9
-		scaleReq, _ := json.Marshal(reqJSONMap)
-		reader := bytes.NewReader(scaleReq)
-		res, err := http.Post("http://gateway:8080/function/scalefilter", "application/json", reader)
-		cimg, _ = decodeImg(res, err)
+		cimg, _ = utils.ScaleImg(req, 0.9)
 		wg.Done()
 	}()
 

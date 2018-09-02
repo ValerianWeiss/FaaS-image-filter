@@ -3,19 +3,23 @@ provider:
   gateway: http://127.0.0.1:8080
 
 functions:
-  imageblur:
-    lang: go
-    handler: ./src/imageFunctions/blur
-    image: imageblur:latest
-  blackwhite:
-    lang: go
-    handler: ./src/imageFunctions/blackwhite
-    image: imageblur:latest
-  trianglelayer:
-    lang: go
-    handler: ./src/imageFunctions/trianglelayer
-    image: imageblur:latest
-  circlelayer:
-    lang: go
-    handler: ./src/imageFunctions/circlelayer
-    image: imageblur:latest
+  blurfilter:
+    lang: dockerfile
+    handler: ../blurfilter
+    image: blurfilter:latest
+  blackwhitefilter:
+    lang: dockerfile
+    handler: ../blackwhitefilter
+    image: blackwhitefilter:latest
+  scalefilter:
+    lang: dockerfile
+    handler: ../scalefilter
+    image: scalefilter:latest
+  circlelayerfilter:
+    lang: dockerfile
+    handler: ../circlelayerfilter
+    image: circlelayerfilter:latest
+  trianglelayerfilter:
+    lang: dockerfile
+    handler: ../trianglelayerfilter
+    image: trianglelayerfilter:latest
