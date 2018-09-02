@@ -5,21 +5,21 @@ provider:
 functions:
   blurfilter:
     lang: dockerfile
-    handler: ../blurfilter
+    handler: ./imageFilters/blurfilter
     image: blurfilter:latest
   blackwhitefilter:
     lang: dockerfile
-    handler: ../blackwhitefilter
+    handler: ./imageFilters/blackwhitefilter
     image: blackwhitefilter:latest
   scalefilter:
     lang: dockerfile
-    handler: ../scalefilter
+    handler: ./imageFilters/scalefilter
     image: scalefilter:latest
   circlelayerfilter:
     lang: dockerfile
-    handler: ../circlelayerfilter
+    handler: ./imageFilters/circlelayerfilter
     image: circlelayerfilter:latest
   trianglelayerfilter:
     lang: dockerfile
-    handler: ../trianglelayerfilter
+    handler: ./imageFilters/trianglelayerfilter
     image: trianglelayerfilter:latest
