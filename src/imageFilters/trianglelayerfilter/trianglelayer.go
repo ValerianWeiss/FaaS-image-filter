@@ -40,7 +40,7 @@ func addLayerTriangle(baseImg image.Image, trImg image.Image) *image.RGBA {
 	centerY := trHeight / 2
 	edgeLen := calcEdgeLen(trWidth, trHeight)
 
-	h := int(math.Sqrt(math.Pow(float64(edgeLen), 2) + math.Pow(float64(edgeLen/2), 2)))
+	h := int(math.Sqrt(math.Pow(float64(edgeLen), 2) - math.Pow(float64(edgeLen/2), 2)))
 	p1 := []int{centerX - edgeLen/2, centerY + h/2}
 	p2 := []int{centerX, centerY - h/2}
 	p3 := []int{centerX + edgeLen/2, centerY + h/2}
