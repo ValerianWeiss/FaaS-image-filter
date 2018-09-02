@@ -66,7 +66,7 @@ func addLayerTriangle(baseImg image.Image, trImg image.Image) *image.RGBA {
 
 func calcEdgeLen(width, height int) int {
 	if width > height {
-		angle := 2 * math.Pi / 360 * 60
+		angle := 2 * math.Pi / 360 * 30
 		return int(float64(height) / math.Cos(angle))
 	}
 	return width
