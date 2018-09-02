@@ -38,7 +38,7 @@ func addLayerTriangle(baseImg image.Image, trImg image.Image) *image.RGBA {
 	inPosY := (height - trHeight) / 2
 	centerX := trWidth / 2
 	centerY := trHeight / 2
-	edgeLen := calcEdgeLen(trWidth, trHeight)
+	edgeLen := edgeLen(trWidth, trHeight)
 
 	h := int(math.Sqrt(math.Pow(float64(edgeLen), 2) - math.Pow(float64(edgeLen/2), 2)))
 	p1 := []int{centerX - edgeLen/2, centerY + h/2}
@@ -64,10 +64,9 @@ func addLayerTriangle(baseImg image.Image, trImg image.Image) *image.RGBA {
 	return newImg
 }
 
-func calcEdgeLen(width, height int) int {
+func edgeLen(width, height int) int {
 	if width > height {
-		angle := 2 * math.Pi / 360 * 30
-		return int(float64(height) / math.Cos(angle))
+		return height
 	}
 	return width
 }
@@ -86,7 +85,7 @@ func getImgs(req []byte) (image.Image, image.Image, string) {
 	}()
 
 	go func() {
-		cimg, _ = utils.ScaleImg(req, 0.9)
+		cimg, _ = utils.ScaleImg(req, 0.75)
 		wg.Done()
 	}()
 
